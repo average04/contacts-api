@@ -35,13 +35,18 @@ namespace Contacts.API.Controllers
         {
             var request = new GetContactByIdRequest() { Id = id };
             var response = await Mediator.Send(request);
-            return response != null ? Ok(response) : NotFound("Id not found");
+            return response != null ? Ok(response) : throw new KeyNotFoundException();
         }
 
         [HttpPut("contact/{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ContactModel body)
         {
-            var request = new UpdateContactRequest() { Id = id };
+            var request = new UpdateContactRequest()
+            {
+                Id = id,
+                Name = body.Name,
+                Numbers = body.Numbers,
+            };
             var response = await Mediator.Send(request);
             return response ? Ok() : NotFound("Id not found");
         }

@@ -19,7 +19,7 @@ namespace Contacts.API
             if (contact != null)
             {
                 contact.Name = request.Name;
-                contact.Numbers = request.Number;
+                contact.Numbers = request.Numbers;
                 contact.IsStarred = request.IsStarred;
 
                 _dbContext.Contact.Update(contact);

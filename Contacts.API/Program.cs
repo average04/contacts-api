@@ -2,6 +2,7 @@ using Contacts.API;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
 using System.Reflection;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,9 @@ builder.Services.AddCors(options => options.AddPolicy("Access-Control-Allow-Orig
         .Build();
 }));
 
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,6 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandling>();
 
 app.UseCors("Access-Control-Allow-Origin");
 
